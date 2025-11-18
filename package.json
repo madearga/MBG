@@ -5,10 +5,10 @@
   "scripts": {
     "build": "next build",
     "check": "concurrently 'pnpm lint' 'eslint' 'pnpm typecheck'",
-    "predev": "convex dev --until-success --run init",
+    "predev": "# convex dev --until-success --run init",
     "dev": "concurrently 'pnpm dev:app' 'pnpm dev:backend'",
     "dev:app": "next dev --turbopack --port 3005",
-    "dev:backend": "convex dev",
+    "dev:backend": "convex dev --typecheck=disable",
     "gen": "cd convex && npx @better-auth/cli generate -y --output authSchema.ts",
     "lint": "npx ultracite@latest check",
     "lint:fix": "npx ultracite@latest fix --unsafe",
