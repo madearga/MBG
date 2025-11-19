@@ -140,7 +140,7 @@ export function BreadcrumbNav() {
           </Breadcrumb>
 
           {/* Center - Quick Links */}
-          <div className="flex items-center gap-4">
+          <div className="hidden items-center gap-4 md:flex">
             <Link
               className="flex items-center gap-1 font-medium text-muted-foreground text-sm transition-colors hover:text-foreground"
               href="/"
