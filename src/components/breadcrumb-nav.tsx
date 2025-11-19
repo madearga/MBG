@@ -8,12 +8,14 @@ import {
   Home,
   LogIn,
   LogOut,
+  Menu,
   Tags,
   TestTube2,
 } from 'lucide-react';
 import type { Route } from 'next';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useState } from 'react';
 import { toast } from 'sonner';
 import { OrganizationSwitcher } from '@/components/organization/organization-switcher';
 import {
@@ -25,6 +27,13 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { Button } from '@/components/ui/button';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 import { signOut } from '@/lib/convex/auth-client';
 import {
   useAuthAction,
@@ -39,6 +48,7 @@ export function BreadcrumbNav() {
   const pathname = usePathname();
   const user = useCurrentUser();
   const generateSamplesAction = useAuthAction(api.seed.generateSamples);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Check if there's any data (projects)
   const { data: projectsData } = usePublicQuery(
@@ -135,9 +145,62 @@ export function BreadcrumbNav() {
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           {/* Left side - Breadcrumbs */}
-          <Breadcrumb>
+          <Breadcrumb className="hidden md:block">
             <BreadcrumbList>{breadcrumbItems}</BreadcrumbList>
           </Breadcrumb>
+
+          {/* Mobile Menu Trigger */}
+          <div className="md:hidden">
+            <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="-ml-2">
+                  <Menu className="h-5 w-5" />
+                  <span className="sr-only">Toggle menu</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left">
+                <SheetHeader>
+                  <SheetTitle>Menu</SheetTitle>
+                </SheetHeader>
+                <div className="flex flex-col gap-4 py-4">
+                  <Link
+                    className="flex items-center gap-2 font-medium text-muted-foreground transition-colors hover:text-foreground"
+                    href="/"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <CheckSquare className="h-4 w-4" />
+                    Todos
+                  </Link>
+                  <Link
+                    className="flex items-center gap-2 font-medium text-muted-foreground transition-colors hover:text-foreground"
+                    href="/projects"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <FolderOpen className="h-4 w-4" />
+                    Projects
+                  </Link>
+                  <Link
+                    className="flex items-center gap-2 font-medium text-muted-foreground transition-colors hover:text-foreground"
+                    href="/tags"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <Tags className="h-4 w-4" />
+                    Tags
+                  </Link>
+                  {user?.activeOrganization?.slug && (
+                    <Link
+                      className="flex items-center gap-2 font-medium text-muted-foreground transition-colors hover:text-foreground"
+                      href={`/org/${user.activeOrganization.slug}`}
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <Building2 className="h-4 w-4" />
+                      Organization
+                    </Link>
+                  )}
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
 
           {/* Center - Quick Links */}
           <div className="hidden items-center gap-4 md:flex">
